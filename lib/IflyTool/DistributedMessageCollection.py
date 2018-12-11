@@ -1,5 +1,6 @@
 #-*-coding:u8-*-
-import Queue
+#import Queue
+from multiprocessing import Queue
 from logger import get_logger
 import threading
 import logging
@@ -9,7 +10,7 @@ from PerfInfoTool import PerfInfoTool
 class DistributedMessageCollection(object):
     
     lock = threading.Lock()
-    load_msg_queue = Queue.Queue()
+    load_msg_queue = Queue()
     
     def __init__(self, host ,port, log_file, pit_log_file, pit_time_interval):
         self.logger = get_logger(self.__class__.__name__, log_file, logging.INFO)
