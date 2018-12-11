@@ -15,6 +15,7 @@ def dmc_server(port):
     time.sleep(3600)
     
 def dmc_server2(port):
+    import time
     DMC = DistributedMessageCollection('',port,'ldcs.log','pit.log',5)
     DMC.add_counter("times","n")
     DMC.add_counter("ok_times","n")
