@@ -55,11 +55,12 @@ class DistributedMessageCollection(object):
             #self.pit_msg_handle2(msg)
     
     def queue_thread_handle2(self):
-        queue = load_msg_queue
+        queue = DistributedMessageCollection.load_msg_queue
         while(True):
             msg = None
             try:
                 msg = queue.pop()
+                print "["+str(msg)+"]"
             except IndexError:
                 print "empty error"
             if msg:
