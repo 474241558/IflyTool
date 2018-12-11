@@ -1,6 +1,6 @@
 #-*-coding:u8-*-
 import Queue
-#from Queue import Queue
+from collections import deque
 from logger import get_logger
 import threading
 import logging
@@ -23,7 +23,7 @@ class LoadData(object):
 class DistributedMessageCollection(object):
     
     lock = threading.Lock()
-    load_msg_queue = Queue.Queue()
+    load_msg_queue = deque()
     
     def __init__(self, host ,port, log_file, pit_log_file, pit_time_interval):
         self.logger = get_logger(self.__class__.__name__, log_file, logging.INFO)
@@ -32,7 +32,6 @@ class DistributedMessageCollection(object):
         self.pit = PerfInfoTool(pit_time_interval, pit_log_file)
         self.pit.start()
         BaseManager.register('get_msg_queue', callable=DistributedMessageCollection.get_msg_queue)
-        #BaseManager.register('get_msg_queue', callable=lambda: self.pit)
         self.manager = BaseManager(address=(host, port), authkey='iflytek')
         self.manager.start()
         self.queue_handle_thread1 = threading.Thread(target=DistributedMessageCollection.queue_thread_handle, args=(self,))
@@ -54,6 +53,13 @@ class DistributedMessageCollection(object):
         while(True):
             msg = queue.get()
             #self.pit_msg_handle2(msg)
+    
+    def queue_thread_handle2(self):
+        queue = self.manager.get_msg_queue()
+        while(True):
+            if len(queue)>0:
+                queue.pop()
+            #self.pit_msg_handle2(msg)
             
     def pit_msg_handle(self,msg):
         #专门处理pit对象的消息
@@ -74,4 +80,4 @@ class DistributedLoadCounter(object):
         self.msg_queue = self.manager.get_msg_queue()
         
     def collect(self, counter_name, value):
-        self.msg_queue.put(counter_name+"|"+str(value))
+        self.msg_queue.append(counter_name+"|"+str(value))
