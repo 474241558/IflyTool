@@ -14,6 +14,17 @@ def dmc_server(port):
     print "start...."
     time.sleep(3600)
     
+def dmc_server2(port):
+    DMC = DistributedMessageCollection('',port,'ldcs.log','pit.log',5)
+    LOG.info("DistributedMessageCollection port:[%s]"%(port))
+    DMC.add_counter("times","n")
+    DMC.add_counter("ok_times","n")
+    DMC.add_counter("fail_times","n")
+    DMC.add_counter("resp_time","t")
+    
+    print "start...."
+    time.sleep(3600)
+    
 def dmc_client(port):
     import time
     from multiprocessing.managers import BaseManager
@@ -49,6 +60,8 @@ def dmc_size(port):
 if __name__ == "__main__":
     if sys.argv[1] == "server":
         dmc_server(int(sys.argv[2]))
+    if sys.argv[1] == "server2":
+        dmc_server2(int(sys.argv[2]))
     if sys.argv[1] == "client":
         dmc_client(int(sys.argv[2]))
     if sys.argv[1] == "size":
