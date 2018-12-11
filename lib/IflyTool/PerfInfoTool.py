@@ -79,11 +79,11 @@ class PerfInfoTool(object):
                 ret_v = perf_d[name]['change_value']/self.time_interval
             else:
                 ret_v = perf_d[name]['change_value']/(time.time() - perf_d[name]['last_change_time'])
-            return ret_v
+            return round(ret_v,4)
         elif p_type=='t':
             if perf_d[name]['change_count'] !=0:
                 ret_v = perf_d[name]['change_value']/perf_d[name]['change_count']
-            return ret_v
+            return round(ret_v,4)
             
     def clear_change(self, lock = True):
         if lock:
@@ -123,7 +123,7 @@ class PerfInfoTool(object):
                 
             for f in self.handle_arr:
                 f(p_info_arr)
-            print_str = " | ".join(map(lambda x:x[0]+":["+str(round(x[1],2))+"]", p_info_arr))
+            print_str = " | ".join(map(lambda x:x[0]+":["+str(round(x[1],4))+"]", p_info_arr))
             self.logger.info(print_str)
     
     def start(self):
