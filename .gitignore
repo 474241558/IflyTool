@@ -1,0 +1,7 @@
+##ignore this file##
+*.log
+*.pyc
+build/
+dist/
+lit/IflyTool.egg-info/
+*.log_*
