@@ -55,7 +55,7 @@ class DistributedMessageCollection(object):
             #self.pit_msg_handle2(msg)
     
     def queue_thread_handle2(self):
-        queue = self.manager.get_msg_queue()
+        queue = load_msg_queue
         while(True):
             msg = None
             try:
