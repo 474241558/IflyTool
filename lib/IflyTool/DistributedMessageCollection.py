@@ -57,9 +57,13 @@ class DistributedMessageCollection(object):
     def queue_thread_handle2(self):
         queue = self.manager.get_msg_queue()
         while(True):
-            if len(queue)>0:
-                queue.pop()
-            #self.pit_msg_handle2(msg)
+            msg = None
+            try:
+                msg = queue.pop()
+            except IndexError:
+                print "empty error"
+            if msg:
+                self.pit_msg_handle2(msg)
             
     def pit_msg_handle(self,msg):
         #专门处理pit对象的消息
