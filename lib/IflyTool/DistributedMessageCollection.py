@@ -38,7 +38,7 @@ class DistributedMessageCollection(object):
         queue = self.manager.get_msg_queue()
         while(True):
             msg = queue.get()
-            self.pit_msg_handle2(msg)
+            #self.pit_msg_handle2(msg)
             
     def pit_msg_handle(self,msg):
         #专门处理pit对象的消息
