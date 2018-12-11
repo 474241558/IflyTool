@@ -7,6 +7,14 @@ import logging
 from multiprocessing.managers import BaseManager
 from PerfInfoTool import PerfInfoTool
 
+class LoadData(object):
+    lock = threading.Lock()
+    def __init__(self):
+        self.items = dict()
+        
+    def collect(self, counter_name, value):
+        pass
+
 class DistributedMessageCollection(object):
     
     lock = threading.Lock()
@@ -16,14 +24,15 @@ class DistributedMessageCollection(object):
         self.logger = get_logger(self.__class__.__name__, log_file, logging.INFO)
         self.port = port
         self.host = host
-        BaseManager.register('get_msg_queue', callable=DistributedMessageCollection.get_msg_queue)
-        self.manager = BaseManager(address=(host, port), authkey='iflytek')
-        self.manager.start()
         self.pit = PerfInfoTool(pit_time_interval, pit_log_file)
         self.pit.start()
-        self.queue_handle_thread1 = threading.Thread(target=DistributedMessageCollection.queue_thread_handle, args=(self,))
-        self.queue_handle_thread1.setDaemon(True)
-        self.queue_handle_thread1.start()
+        #BaseManager.register('get_msg_queue', callable=DistributedMessageCollection.get_msg_queue)
+        BaseManager.register('get_msg_queue', callable=lambda: self.pit)
+        self.manager = BaseManager(address=(host, port), authkey='iflytek')
+        self.manager.start()
+        #self.queue_handle_thread1 = threading.Thread(target=DistributedMessageCollection.queue_thread_handle, args=(self,))
+        #self.queue_handle_thread1.setDaemon(True)
+        #self.queue_handle_thread1.start()
     
     def add_counter(self, name, p_type = 'n'):
         self.pit.add_counter(name, p_type)
@@ -60,4 +69,4 @@ class DistributedLoadCounter(object):
         self.msg_queue = self.manager.get_msg_queue()
         
     def collect(self, counter_name, value):
-        self.msg_queue.put(counter_name+"|"+str(value))
+        self.msg_queue.add_value(counter_name, value)
