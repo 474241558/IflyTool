@@ -74,4 +74,4 @@ class DistributedLoadCounter(object):
         self.msg_queue = self.manager.get_msg_queue()
         
     def collect(self, counter_name, value):
-        self.msg_queue.add_value(counter_name, value)
+        self.msg_queue.put(counter_name+"|"+str(value))
