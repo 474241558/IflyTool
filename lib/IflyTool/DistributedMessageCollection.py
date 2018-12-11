@@ -34,7 +34,7 @@ class DistributedMessageCollection(object):
         BaseManager.register('get_msg_queue', callable=DistributedMessageCollection.get_msg_queue)
         self.manager = BaseManager(address=(host, port), authkey='iflytek')
         self.manager.start()
-        self.queue_handle_thread1 = threading.Thread(target=DistributedMessageCollection.queue_thread_handle, args=(self,))
+        self.queue_handle_thread1 = threading.Thread(target=DistributedMessageCollection.queue_thread_handle2, args=(self,))
         self.queue_handle_thread1.setDaemon(True)
         self.queue_handle_thread1.start()
     
