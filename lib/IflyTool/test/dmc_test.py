@@ -16,7 +16,6 @@ def dmc_server(port):
     
 def dmc_server2(port):
     DMC = DistributedMessageCollection('',port,'ldcs.log','pit.log',5)
-    LOG.info("DistributedMessageCollection port:[%s]"%(port))
     DMC.add_counter("times","n")
     DMC.add_counter("ok_times","n")
     DMC.add_counter("fail_times","n")
