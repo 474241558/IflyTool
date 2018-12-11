@@ -45,6 +45,11 @@ class DistributedMessageCollection(object):
         for k,v in msg.items():
             self.pit.add_value(k, v)
             
+    def pit_msg_handle2(self,msg):
+        #专门处理pit对象的消息
+        tmp_arr = msg.split('|')
+        self.pit.add_value(tmp_arr[0], float(tmp_arr[1]))
+    
 class DistributedLoadCounter(object):
     
     def __init__(self, host, port):
@@ -54,4 +59,4 @@ class DistributedLoadCounter(object):
         self.msg_queue = self.manager.get_msg_queue()
         
     def collect(self, counter_name, value):
-        self.msg_queue.put({counter_name:value})
+        self.msg_queue.put(counter_name+"|"+str(value)})
