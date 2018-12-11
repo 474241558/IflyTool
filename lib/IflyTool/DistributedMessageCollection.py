@@ -1,6 +1,6 @@
 #-*-coding:u8-*-
 #import Queue
-from multiprocessing import Queue
+from Queue import Queue
 from logger import get_logger
 import threading
 import logging
@@ -11,9 +11,14 @@ class LoadData(object):
     lock = threading.Lock()
     def __init__(self):
         self.items = dict()
+        self.items['times'] = 0
+        self.items['ok_times'] = 0
+        self.items['fail_times'] = 0
+        self.items['resp_time'] = 0
         
     def collect(self, counter_name, value):
-        pass
+
+        self.items[counter_name]+=value
 
 class DistributedMessageCollection(object):
     
@@ -30,9 +35,9 @@ class DistributedMessageCollection(object):
         BaseManager.register('get_msg_queue', callable=lambda: self.pit)
         self.manager = BaseManager(address=(host, port), authkey='iflytek')
         self.manager.start()
-        #self.queue_handle_thread1 = threading.Thread(target=DistributedMessageCollection.queue_thread_handle, args=(self,))
-        #self.queue_handle_thread1.setDaemon(True)
-        #self.queue_handle_thread1.start()
+        self.queue_handle_thread1 = threading.Thread(target=DistributedMessageCollection.queue_thread_handle, args=(self,))
+        self.queue_handle_thread1.setDaemon(True)
+        self.queue_handle_thread1.start()
     
     def add_counter(self, name, p_type = 'n'):
         self.pit.add_counter(name, p_type)
